@@ -6,9 +6,17 @@ import MarketCap from '~/components/Analytics/Bean/MarketCap';
 import Volume from '~/components/Analytics/Bean/Volume';
 import Liquidity from '~/components/Analytics/Bean/Liquidity';
 import { Module, ModuleTabs } from '~/components/Common/Module';
+import Price from '~/components/Analytics/Bean/Price';
 
 const SLUGS = ['liquidity', 'volume', 'delta-b', 'price'];
-const WellCharts: React.FC<{}> = () => {
+
+type WellProps = {
+  wellId: string;
+};
+
+// Chart that appears on the Well Detail page
+const WellCharts: React.FC<WellProps> = ({ wellId }) => {
+  // TODO: Lookup data by wellId
   const [tab, handleChangeTab] = useTabs(SLUGS, 'bean');
 
   return (
@@ -20,11 +28,12 @@ const WellCharts: React.FC<{}> = () => {
         <Tab label="Price (BEAN/ETH)" />
         <Tab label="Price (ETH/BEAN)" />
       </ModuleTabs>
+      {/* TODO: Updated components depending on which Well is selected */}
       {tab === 0 && <Liquidity height={240} />}
       {tab === 1 && <Volume height={240} />}
       {tab === 2 && <MarketCap height={240} />}
-      {tab === 3 && <Supply height={240} />}
-      {tab === 3 && <Supply height={240} />}
+      {tab === 3 && <Price height={240} />}
+      {tab === 4 && <Supply height={240} />}
     </Module>
   );
 };
