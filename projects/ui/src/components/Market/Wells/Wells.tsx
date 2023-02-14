@@ -15,7 +15,7 @@ import { BEAN } from '~/constants/tokens';
 import Row from '~/components/Common/Row';
 import WhitelistBadge from '~/components/Market/Wells/WhitelistBadge';
 import { Token } from '@beanstalk/sdk';
-import { useWell } from '~/hooks/wells/useWell';
+import useWell from '~/hooks/wells/useWell';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
@@ -49,7 +49,9 @@ export type Well = {
  */
 const Wells: React.FC = () => {
   // Load well from the hardcoded initial well
-  const { well, loading: wellIsLoading } = useWell('0x1');
+  const { well, loading: wellIsLoading } = useWell(
+    '0xD94A92749C0bb33c4e4bA7980c6dAD0e3eFfb720'
+  );
 
   return (
     <Card>
@@ -100,7 +102,7 @@ const Wells: React.FC = () => {
         <Box key="1">
           <Button
             component={RouterLink}
-            to="/market/wells/1" // TODO: Where do get well ID?
+            to="/market/wells/0xD94A92749C0bb33c4e4bA7980c6dAD0e3eFfb720"
             fullWidth
             variant="outlined"
             color="secondary"
@@ -164,7 +166,9 @@ const Wells: React.FC = () => {
                  * Cell: Volume
                  */}
                 <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                  <Typography color="black">{well!.type}</Typography>
+                  <Typography color="black">
+                    {well!.type}
+                  </Typography>
                 </Grid>
 
                 {/**
@@ -177,7 +181,9 @@ const Wells: React.FC = () => {
                       componentsProps={TOOLTIP_COMPONENT_PROPS}
                       title="Toooltip"
                     >
-                      <Typography color="black">{well!.type}</Typography>
+                      <Typography color="black">
+                        {well!.type}
+                        </Typography>
                     </Tooltip>
                     <Stack
                       display={{ xs: 'none', md: 'block' }}

@@ -6,7 +6,7 @@ import WhitelistBadge from '~/components/Market/Wells/WhitelistBadge';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
-import { useWell } from '~/hooks/wells/useWell';
+import useWell from '~/hooks/wells/useWell';
 
 type WellProps = {
   wellId: string;
@@ -16,7 +16,7 @@ type WellProps = {
 const WellReserves: React.FC<WellProps> = ({ wellId }) => {
   const { wellReserves, loading } = useWell(wellId);
 
-  const formatPercentage = (value: number) => value * 100;
+  const formatPercentage = (value: number) => (value * 100).toFixed(2);
 
   // Loading spinner?
   return (
