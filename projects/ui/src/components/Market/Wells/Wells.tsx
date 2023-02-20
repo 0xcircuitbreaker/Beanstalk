@@ -44,14 +44,14 @@ export type Well = {
   compact?: boolean;
 };
 
+// TODO: How to get this? Env var?
+const WELL_ID = '0xa6AB86f760ae5D6fbF06056a7887b816610A4668';
+
 /**
  * Wells listing on main Explore page
  */
 const Wells: React.FC = () => {
-  // Load well from the hardcoded initial well
-  const { well, loading: wellIsLoading } = useWell(
-    '0xD94A92749C0bb33c4e4bA7980c6dAD0e3eFfb720'
-  );
+  const { well, loading: wellIsLoading } = useWell(WELL_ID);
 
   return (
     <Card>
@@ -102,7 +102,7 @@ const Wells: React.FC = () => {
         <Box key="1">
           <Button
             component={RouterLink}
-            to="/market/wells/0xD94A92749C0bb33c4e4bA7980c6dAD0e3eFfb720"
+            to={`/market/wells/${WELL_ID}`}
             fullWidth
             variant="outlined"
             color="secondary"
@@ -166,9 +166,7 @@ const Wells: React.FC = () => {
                  * Cell: Volume
                  */}
                 <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                  <Typography color="black">
-                    {well!.type}
-                  </Typography>
+                  <Typography color="black">{well!.type}</Typography>
                 </Grid>
 
                 {/**
@@ -181,9 +179,7 @@ const Wells: React.FC = () => {
                       componentsProps={TOOLTIP_COMPONENT_PROPS}
                       title="Toooltip"
                     >
-                      <Typography color="black">
-                        {well!.type}
-                        </Typography>
+                      <Typography color="black">{well!.type}</Typography>
                     </Tooltip>
                     <Stack
                       display={{ xs: 'none', md: 'block' }}

@@ -14,7 +14,7 @@ type WellProps = {
 
 // Box on the right of the Well Detail page
 const WellReserves: React.FC<WellProps> = ({ wellId }) => {
-  const { wellReserves, loading } = useWell(wellId);
+  const { well, loading } = useWell(wellId);
 
   const formatPercentage = (value: number) => (value * 100).toFixed(2);
 
@@ -32,27 +32,27 @@ const WellReserves: React.FC<WellProps> = ({ wellId }) => {
               <Row justifyContent="space-between">
                 <Row gap={0.5}>
                   <TokenIcon token={BEAN[1]} />
-                  <Typography>{wellReserves.token1}</Typography>
+                  <Typography>{well.reserves!.token1}</Typography>
                 </Row>
                 <Typography>
-                  {wellReserves.token1Amount.toLocaleString('en-us')} (
-                  {`${formatPercentage(wellReserves.token1Percentage)}%`})
+                  {well.reserves!.token1Amount.toLocaleString('en-us')} (
+                  {`${formatPercentage(well.reserves!.token1Percentage)}%`})
                 </Typography>
               </Row>
               <Row justifyContent="space-between">
                 <Row gap={0.5}>
                   <TokenIcon token={BEAN[1]} />
-                  <Typography>{wellReserves.token2}</Typography>
+                  <Typography>{well.reserves!.token2}</Typography>
                 </Row>
                 <Typography>
-                  {wellReserves.token2Amount.toLocaleString('en-us')} (
-                  {`${formatPercentage(wellReserves.token2Percentage)}%`})
+                  {well.reserves!.token2Amount.toLocaleString('en-us')} (
+                  {`${formatPercentage(well.reserves!.token2Percentage)}%`})
                 </Typography>
               </Row>
               <Divider />
               <Row justifyContent="space-between">
                 <Typography>USD Total</Typography>
-                <Typography>{wellReserves.usdTotal}</Typography>
+                <Typography>{well.reserves!.usdTotal}</Typography>
               </Row>
             </Stack>
           </Stack>

@@ -1,23 +1,16 @@
 import { TokenValue } from '@beanstalk/sdk';
 import { ERC20Token } from '@beanstalk/sdk-core';
 // TODO: wells sdk should export this type
-import { Well } from '@beanstalk/wells/dist/types/lib/Well';
+import { Well } from '@beanstalk/wells';
 import { useCallback, useEffect, useState } from 'react';
-import { useSigner } from 'wagmi';
 import useSdk from '../sdk';
 
-type UIWellDetails = {
+export type UIWellDetails = {
   id: string;
   address: string;
   name: string;
   type: string;
-};
-
-const EMPTY_WELL_DETAILS_STATE = {
-  id: '',
-  address: '',
-  name: '',
-  type: '',
+  reserves: UIWellReserves | undefined;
 };
 
 type UIWellReserves = {
@@ -40,6 +33,14 @@ const EMPTY_WELL_RESERVES_STATE = {
   usdTotal: 0,
 };
 
+const EMPTY_WELL_DETAILS_STATE = {
+  id: '',
+  address: '',
+  name: '',
+  type: '',
+  reserves: EMPTY_WELL_RESERVES_STATE,
+};
+
 export default function useWell(wellId: string) {
   const sdk = useSdk();
 
@@ -48,9 +49,6 @@ export default function useWell(wellId: string) {
   const [wellDetails, setWellDetails] = useState<UIWellDetails>(
     EMPTY_WELL_DETAILS_STATE
   );
-  const [wellReserves, setWellReserves] = useState<UIWellReserves>(
-    EMPTY_WELL_RESERVES_STATE
-  );
 
   // Transient state
   const [loading, setLoading] = useState(true);
@@ -58,48 +56,37 @@ export default function useWell(wellId: string) {
   // useCallback
   const loadWellAndReserves = async (wellId: string) => {
     const well = await sdk.wells.getWell(wellId);
-    // const wellFunction = await well.getWellFunction();
-    // WellFunction.createFromAddress(...);
-    // Well.create().withWellFunction(wf).withPump(...).build()
-
-    // fully loaded
-    // well.name
-    // well.tokens
-    // well.reserves...
-    // well.xyz
-    // well.wellFunction.name/type
-
+    if (!well) return; // TODO: Error?
     setWell(well);
     await well.loadWell();
 
-    setWellDetails({
-      id: well.address,
-      address: well.address,
-      name: await well.getName(),
-      type: 'Constant Product', // TODO: From SDK?
-    });
-
-    const reserves = await well.getReserves();
-    const tokens = await well.getTokens();
-
-    const [token1, token2] = tokens;
-    const [reserve1, reserve2] = reserves;
+    const [token1, token2] = well!.tokens!;
+    const [reserve1, reserve2] = well!.reserves!;
 
     const token1Amount = parseInt(reserve1.toHuman());
     const token2Amount = parseInt(reserve2.toHuman());
 
-    const token1Percentage = parseFloat(reserve1.div(reserve1.add(reserve2)).mul(100).toHuman());
-    const token2Percentage = parseFloat(reserve2.div(reserve1.add(reserve2)).mul(100).toHuman());
+    const token1Percentage = parseFloat(
+      reserve1.div(reserve1.add(reserve2)).mul(100).toHuman()
+    );
+    const token2Percentage = parseFloat(
+      reserve2.div(reserve1.add(reserve2)).mul(100).toHuman()
+    );
 
-    // TODO: Really would be nice to have something that looked more like below
-    setWellReserves({
-      token1: token1.displayName,
-      token1Amount,
-      token1Percentage,
-      token2: token2.displayName,
-      token2Amount,
-      token2Percentage,
-      usdTotal: 10000,
+    setWellDetails({
+      id: well.address,
+      address: well.address,
+      name: well.name || '',
+      type: 'Constant Product', // TODO: Wen from SDK?,
+      reserves: {
+        token1: token1.displayName,
+        token1Amount,
+        token1Percentage,
+        token2: token2.displayName,
+        token2Amount,
+        token2Percentage,
+        usdTotal: 10000,
+      },
     });
   };
 
@@ -117,7 +104,6 @@ export default function useWell(wellId: string) {
 
   return {
     well: wellDetails,
-    wellReserves,
     loading,
   };
 }

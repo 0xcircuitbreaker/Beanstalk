@@ -16,12 +16,16 @@ import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
 import { displayBN } from '~/util';
 import PagePath from '~/components/Common/PagePath';
 import { useParams } from 'react-router-dom';
+import useWell from '~/hooks/wells/useWell';
 
 // Wells Detail page
 // Once you click on a Liquidity Well
 const WellPage: React.FC = () => {
   /// Routing
   const { id } = useParams<{ id: string }>();
+  if (!id) throw Error('Oh well');
+
+  const {well} = useWell(id);
 
   return (
     <Container maxWidth="lg">
@@ -54,7 +58,7 @@ const WellPage: React.FC = () => {
                 textAlign="center"
                 sx={{ verticalAlign: 'middle' }}
               >
-                BEAN:ETH Liquidity Well debug {id}
+                {well!.name}
               </Typography>
             </Row>
           }
